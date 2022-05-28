@@ -107,12 +107,17 @@ import 'bootstrap/js/dist/dropdown';
 ## Creare e gestire la prima rotta
 
 1. aprire il file web.php
-2. Da terminale lanciare il comando: ```php artisan make:controller [NomeCOntroller]```
+2. Da terminale lanciare il comando: ```php artisan make:controller [NomeController]```
 2. creiamo la struttura della rotta sulla base del controller:
-```
+```PHP
 Route::get('/', 'PageController@index' )->name('home');
 ```
-
+## Creare rotta resource -> singola rotta che contiene all'interno istanziati i metodi per la CRUD(create-read-update-delete)
+1.Da terminale lanciare il comando: ```php artisan make:controller [NomeController] --resource```.(verrà generato un controller al app/Http/Controllers/[NomeController])
+2.crea una rotta del controller nelle views:
+```PHP
+Route::resource('/', '[NomeController]');
+```
 
 ## Stampare tabella nel terminale per leggere le liste
 1. lanciare da terminale il comando: ```php artisan route:list```
@@ -120,3 +125,71 @@ Route::get('/', 'PageController@index' )->name('home');
 ## creare un model
 
 1. aprire il terminale e lanciare il comando: ```php artisan make:model Models/[NomeModello]```
+
+## Creare tabelle con Laravel
+1. tramite phpMyAdmin creare un nuovo database 
+2. Se non lo hai ancora fatto inserisci i dettagli della connessione al database nel file .env
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE= [NomeDatabase]
+DB_USERNAME=root
+DB_PASSWORD=root
+```
+3. Da terminale lanciare il comando 
+```
+php artisan make:migration create_[nometabella(minuscolo-plurale)]_table
+```
+verrà creato un file in database/migrations con timestamp data e ora della creazione formato da due funzioni 
+a. nella funzone up() dovranno essere inseriti i comandi che creano la tabella(le colonne)
+b. nella funzone down() c'è il metodo che cancella la funzione up()
+
+4. Per creare la tabella lanciare da terminale il comando 
+```
+php artisan migrate
+``` 
+
+5. Si può tornare "indietro nel tempo" (tornare allo stato precedente rispetto l'ultima esecuzione di migration) tramite il comando da terminale 
+```
+php artisan migrate:rollback
+```
+
+!!! Per cancellare tutte le migration e quindi tutti i dati insieme lanciare il comando da terminale 
+```
+php artisan migrate:reset
+```
+
+## Generare un seeder
+1. Da terminale lanciare il comando: 
+```
+php artisan make:seeder ['NomeSeeder']
+```
+verrà generato un file in database/seeds
+2. Nel file appena creato scrivere 
+```PHP
+use App\Models\[NomeModel];
+```
+per implementare il database da popolare col seed  
+3. Una volta creato il seed e compilato, lancio il comando da terminale
+```
+php artisan db:seed
+```
+per popolare il database con i dati.
+
+## Installare libreria Faker
+1. Per prima cosa eliminare libreria esistente in laravel in disuso
+```
+composer remove fzaninotto/faker 
+```
+
+2. Insallare la libreria Faker tramite composer
+```
+composer require fakerphp/faker
+```
+3.Implementare la libreria faker nel file seed che la utilizzerà
+```PHP
+use Faker\Generator as Faker;
+```
+
+4. Documentazione-> https://fakerphp.github.io/
